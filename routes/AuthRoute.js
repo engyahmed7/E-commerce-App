@@ -1,9 +1,15 @@
 const router = require('express').Router()
 const authController = require('../controller/authController')
+const validationFunction = require('../middleware/validationFun')
+const {
+    signUpValidation,
+    signInValidation,
+    ResetPasswordValidation
+} = require('../validation/authValidation')
 
-router.post('/register', authController.register)
+router.post('/register', validationFunction(signUpValidation), authController.register)
 
-router.get('/confirm/:token', authController.confirmEmail)
+router.get('/confirm/:token', validationFunction(signInValidation), authController.confirmEmail)
 
 router.get('/re-sendToken/:id', authController.ResendToken)
 //reconfirm email
@@ -15,7 +21,7 @@ router.post('/login', authController.login)
 router.post('/sendCode', authController.sendCode)
 
 //reset password
-router.patch('/resetPassword', authController.resetPassword)
+router.patch('/resetPassword', validationFunction(ResetPasswordValidation), authController.resetPassword)
 
 
 module.exports = router
